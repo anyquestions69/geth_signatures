@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Идентификация компроментирования базы данных</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300'><link rel="stylesheet" href="{% static "upload.css" %}">
+
+</head>
+<body>
+  <div id="results" style="display:none">
+    <div id="close">Закрыть</div>
+    <div id="resultText">"fieldname":"file","originalname":"data5.xlsx","encoding":"7bit","mimetype":"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet","d</div>
+  </div>
+<!-- partial:index.partial.html -->
+<div class="upload">
+ <div class="upload-files">
+  <header>
+   <p>
+    <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+    <span class="up">.pdf</span>
+   </p>
+  </header>
+  
+  <div class="body" id="drop">
+   <i class="fa fa-file-text-o pointer-none" aria-hidden="true"></i>
+   <p class="pointer-none"><b>Перетащите</b> файлы сюда <br /> или <a href="" id="triggerFile">выберите</a> для начала работы </p>
+  
+      {% block content %}
+                <form method = "post" id="form" enctype="multipart/form-data">
+                   {% csrf_token %}
+                   {{ form.as_p }}
+                   <button type="submit"> Загрузить</button>
+                </form>
+      {% endblock %}
+  </div>
+  <footer>
+   <div class="divider">
+    <span><AR>Файлы</AR></span>
+   </div>
+   <div class="list-files">
+    <!--   template   -->
+   </div>
+			<button class="importar">Загрузить другой файл</button>
+  </footer>
+  
+ </div>
+</div>
+<!-- partial -->
+  <script  src="{% static "upload.js" %}"></script>
+
+</body>
+</html>

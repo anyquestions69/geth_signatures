@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "css/all.css" %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "style.css" %}">
+    <title>Статьи</title>
+</head>
+<body>
+    <div class="container">
+        <main>
+            {% include "nav.html" %}
+            {% include "filter.html" %}
+            <div id="content">
+                {% for file in files %}
+                <a href="/article/{{file.id}}"><div class="user">
+                    <div class="res_data">
+                       
+                       <div class="res_id">{{file.name}} </div> 
+
+                        <div class="res_category">{{file.file}}</div>
+                        <div class="res_desc"></div>
+                        
+                        <div class="title">{{file.date|date:'d.m.Y'}}</div>
+                         
+                    </div>
+                    <div class="res_info">
+                        <div class="info-top">Расписались: 10/25
+                        <div class="address">
+                            </div></div>
+                           
+                        
+                    </div>
+                </div></a>{% endfor %}
+             <div class="pagination">
+                    {% if files.has_previous %}
+                    <a href="?page=1"><i class="fa-solid fa-angles-left fa-xs"></i></a>
+                    <a href="?page={{ members.previous_page_number }}"><i class="fa-solid fa-angle-left fa-xs"></i></a>
+                {% endif %}
+                    {% for page_number in files.adjusted_elided_pages %}
+                   
+
+                            {% if page_number == files.paginator.ELLIPSIS %}
+
+                                {{page_number}}
+
+                            {% else %}
+
+                                <a
+
+                                    href="?page={{page_number }}"
+
+                                    class="{% if page_number == members.number %}current{% endif %}"
+
+                                >
+
+                                    {{page_number}}
+
+                                </a>
+
+                            {% endif %}
+                            
+
+                        {% endfor %}
+
+                        {% if files.has_next %}
+                            <a href="?page={{ members.next_page_number }}"><i class="fa-solid fa-angle-right fa-xs"></i></a>
+                            <a href="?page={{ members.paginator.num_pages }}"><i class="fa-solid fa-angles-right fa-xs"></i></a>
+                        {% endif %}
+                    
+                </div> 
+               
+            </div>
+
+        </main>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="{% static "script.js" %}"></script>
+</body>
+</html>

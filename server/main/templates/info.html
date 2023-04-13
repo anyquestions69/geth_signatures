@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static "style.css" %}">
+    <link rel="stylesheet" href="{% static "css/all.css" %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;900&display=swap" rel="stylesheet">
+<script>
+    function openCity(evt, cityName) {
+      var i, tabcontent, tablinks;
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+      }
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+    <script src="{% static "pdf.js" %}"></script>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "style.css" %}">
+    <title>{{title}}</title>
+</head>
+<body onload="init()">
+    <div class="container">
+        <main>
+            {% include "nav.html" %}
+           
+            <div id="content">
+                <ul id="tabs">
+                    <li><a href="#article">Cодержимое статьи</a></li>
+                    <li><a href="#signers">Статистика доведения</a></li>
+                  </ul>
+                  <div id="article" class="tabContent">
+                    
+                    <iframe src="/media/{{filename}}"
+                    width="100%" height="700px"></iframe>
+
+                   
+                  </div>
+                  <div id="signers" class="tabContent">
+                    <table id="tableSigners">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Воинское звание, ФИО 
+                                </th>
+                                <th>
+                                   
+                                    Подпись
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    Тыренко
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-signature"></i> Не подписал
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                  </div>
+                  
+                  
+                  
+                  
+            </div>
+            <div id="sign_block"> <button id="sign" type="button">Подписать</button></div>
+        </main>
+    </div>
+    
+    
+</body>
+</html>

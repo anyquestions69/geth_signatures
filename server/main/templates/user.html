@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;900&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "style.css" %}">
+    <title>Участники рынка</title>
+</head>
+<body>
+    <div class="container">
+        <main>
+            <div class="header">
+                <div class="card">
+                    <div class="col-2">
+                    <div class="general">
+                        <h2> {{user.name}} </h2> <div class="info-rating">Рейтинг: {{user.rating}} </div>
+                    </div>
+                        <table>
+                            <tr>
+                                <th>ИНН:</th>
+                                <td>{{participant.inn}} </td>
+                              </tr>
+                              <tr>
+                                <th>Адрес:</th>
+                                <td>{{participant.inn}} </td>
+                              </tr>
+                              <tr>
+                                <th>Участий в аукционе:</th>
+                                <td>{{user.procedure_qty}} </td>
+                              </tr>
+                              <tr>
+                                <th>Побед в аукционе:</th>
+                                <td>{{participant.win_qty}} </td>
+                              </tr>
+                              <tr>
+                                <th>Минимальная цена:</th>
+                                <td>{{participant.min_price}} </td>
+                              </tr>
+                              <tr>
+                                <th>Количество закупок:</th>
+                                <td>{{user.order_count}} </td>
+                              </tr>
+                              <tr>
+                                <th>Подтвержденных закупок:</th>
+                                <td>{{user.amount_accepted}} </td>
+                              </tr>
+                              <tr>
+                                <th>Среднее время выполнения заказа:</th>
+                                <td>{{user.average_order_time}} </td>
+                              </tr>
+                              
+                        </table>
+                      </div>
+                        <div class="col-2"> <canvas id="myChart"></canvas></div>
+                       {% for av in avg %}
+                        {{av.inn}}
+                       {% endfor %}
+                   
+            </div>
+            <div class="card">
+              <div class="col-2"> <canvas id="customerRate"></canvas></div>
+              <div class="col-2"> <canvas id="ordererRate"></canvas></div>
+            </div>
+            </div>
+            <div id="content">
+              
+               <!--  {% for order in orders %}
+                <a href="/user"><div class="user">
+                    <div class="res_data">
+                       
+                       <div class="res_id">{{order.name}} </div> 
+
+                        <div class="res_category">Cреднее время выполнение заказа: {{order.section.name}}</div>
+                        <div class="res_desc">Всего сделок: {{order.order_count}} Успешных: {{order.category.name}} </div>
+                        
+                        <div class="title">Продавец: {{order.seller}} Покупатель: {{order.buyer}}₽</div>
+                         
+                    </div>
+                    <div class="res_info">
+                        <div class="info-top"><div class="rating">Аукцион</div>
+                        <div class="address">
+                            {{order.address}}
+                            </div></div>
+                            <div class="info-rating">
+                                <span class="rate">Рейтинг: </span><span class="number">{{order.rating}}</span>
+                            </div>
+                        
+                    </div>
+                </div></a>{% endfor %} -->
+            </div>
+
+        </main>
+    </div>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="{% static "script.js" %}"></script>
+    <script src="{% static "charts.js" %}"></script>
+</body>
+</html>
