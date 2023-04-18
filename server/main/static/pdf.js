@@ -64,3 +64,8 @@ function getHash( url ) {
   var hashPos = url.lastIndexOf ( '#' );
   return url.substring( hashPos + 1 );
 }
+
+$("#close").addEventListener("click", () => {
+
+  $('#alert').style.display = "none"
+})

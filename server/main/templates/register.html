@@ -10,33 +10,32 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static "style.css" %}">
-    <title>Статьи</title>
+    <title>Регистрация</title>
 </head>
 <body>
     <div class="container">
         <main>
             {% include "nav.html" %}
+           
             <div id="content">
                 <div id="sendFile">
-                    <h2>Загрузить статью</h2>
+                    <h2>Создание кошелька</h2>
                     {% block content %}
                     <form method = "post", enctype="multipart/form-data">
                     {% csrf_token %}
-                    {{ form.name}}
-                    <label class="input-file">
-                        {{form.file}}
-                        <span class="input-file-btn">Выберите файл</span>           
-	                	<span class="input-file-text">Максимум 10мб</span>
-                    </label>
-                    <button id="send" type="submit"> Загрузить</button>
+                   
+                    {{form.name}}
+                    <input type="password" name="password" placeholder="Секретная фраза" maxlength="80" required="" id="id_password">
+                    <button id="send" type="submit"> Создать кошелек</button>
                     </form>
                     {% endblock %}
                 </div>
+               
             </div>
 
         </main>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="{% static "script.js" %}"></script>
 </body>
 </html>

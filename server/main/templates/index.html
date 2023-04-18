@@ -22,18 +22,14 @@
                 <a href="/article/{{file.id}}"><div class="user">
                     <div class="res_data">
                        
-                       <div class="res_id">{{file.name}} </div> 
-
-                        <div class="res_category">{{file.file}}</div>
-                        <div class="res_desc"></div>
-                        
-                        <div class="title">{{file.date|date:'d.m.Y'}}</div>
+                       <div class="res_id"><i class="fa-regular fa-newspaper"></i> {{file.name}} </div> 
+                       <div class="res_category">{{file.date|date:'d.m.Y'}}</div> 
+                       
                          
                     </div>
-                    <div class="res_info">
-                        <div class="info-top">Расписались: 10/25
-                        <div class="address">
-                            </div></div>
+                    
+                        <div class="info-top">Расписались: {{file.signed}} /{{total}}
+                        
                            
                         
                     </div>
@@ -80,7 +76,7 @@
 
         </main>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <script src="{% static "script.js" %}"></script>
 </body>
 </html>

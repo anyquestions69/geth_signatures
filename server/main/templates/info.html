@@ -41,6 +41,7 @@
                     <li><a href="#article">Cодержимое статьи</a></li>
                     <li><a href="#signers">Статистика доведения</a></li>
                   </ul>
+                
                   <div id="article" class="tabContent">
                     
                     <iframe src="/media/{{filename}}"
@@ -53,7 +54,7 @@
                         <thead>
                             <tr>
                                 <th>
-                                    Воинское звание, ФИО 
+                                    ФИО, адрес кошелька
                                 </th>
                                 <th>
                                    
@@ -62,26 +63,52 @@
                             </tr>
                         </thead>
                         <tbody>
+                            {% for user in users %}
                             <tr>
                                 <td>
-                                    Тыренко
+                                    {{user.name}}, {{user.wallet}}
                                 </td>
                                 <td>
-                                    <i class="fa-solid fa-signature"></i> Не подписал
+                                    {% if user.signed %}
+                                    <i class="fa-solid fa-signature"></i> {% endif %}{{user.signed|yesno:"Подписал, Не подписал"}}
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
+                    {% for sign in signatures %}
+                            <tr>
+                                <td>
+                                    {{sign.file}} {{sign.user}}
+                                </td>
+                                <td>
+                                    <i class="fa-solid fa-signature"></i> {{sign.hash}} {{sign.date}}
+                                </td>
+                            </tr>
+                            {% endfor %}
                   </div>
                   
                   
                   
                   
             </div>
-            <div id="sign_block"> <button id="sign" type="button">Подписать</button></div>
+            {% if not client_signed and  auth %}
+            <div id="sign_block"><form method="POST"> {% csrf_token %} <input type="password" name="password" placeholder="Секретная фраза" maxlength="80" required="" id="id_password"><button id="sign" type="submit">Подписать</button></form>
+               
+             </div>
+             {% endif %}
+             {% if errors %}
+             <div id="alert">
+                <div id="close" onclick="document.getElementById('alert').style.display='none'"><i style="color:white" class="fa-solid fa-xmark"></i></div>
+             {% for er in errors %}
+                    <p > {{er}}</p>
+                 {% endfor %}
+                
+                </div>
+                {% endif %}
         </main>
     </div>
-    
+   
     
 </body>
 </html>

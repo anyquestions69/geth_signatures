@@ -2,6 +2,10 @@
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
+
+}
+body{
+    background: #f7f9fb;;
 }
 a{
     text-decoration: none;
@@ -21,6 +25,7 @@ main{
     padding:15px;
     display: flex;
     margin-top: 25px;
+    align-items: center;
 }
 .res_data{
     width: 70%;
@@ -30,6 +35,7 @@ main{
     padding: 0 0 0 15px;
 }
 .info-top{
+    width: 30%;
     text-align: end;
 }
 .address{
@@ -38,8 +44,12 @@ main{
 }
 .res_id{
     font-size: bold;
+    font-size: 1.2em;
     color:rgb(12, 190, 15);
     margin: 7px 0;
+}
+.res_id i{
+    color:rgb(12, 190, 15);
 }
 .res_desc{
     margin:10px 0;
@@ -226,7 +236,7 @@ ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
     justify-content: space-between;
     background: #36bdff;
     color: white;
-  
+  font-size: 1.1em;
   }
 
   nav a{
@@ -241,13 +251,19 @@ ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
     margin:15px auto;
     text-align: center;
     padding: 40px 20px;
-    background:white
+    background:white;
+    border:1px solid #36bdff;
+    box-shadow: 0 4px 24px rgba(6,88,148,0.15);
   }
-  #sendFile input[type=text]{
+  #sendFile input[type=text], #sendFile input[type=password]{
     margin:15px;
     padding:7px;
     border:2px solid #36bdff;
 
+  }
+  #sendFile h2{
+    color:#0a61bf;
+    font-weight: normal;
   }
   #sendFile button{
     padding:7px 15px;
@@ -342,7 +358,41 @@ justify-content: space-between;
 text-align: center;
 width: fit-content;
 }
+#sign_block input{
+border: 2px solid #36bdff;
+ 
+padding: 10px 25px;
+font-size: 1em;
+border-radius: 0;
+border-top: none;
+display: inline;
+border-right: none;
+
+}
 #sign{padding: 10px 25px;
     font-size: 1em;
     border-radius: 0;
-    border-top: none;}
+    border-top: none;display:inline}
+
+#alert{
+    position: fixed;
+    top:50%;
+    left:50%;
+    right:50%;
+    background: #fd5f5f;
+    z-index: 11111;
+    width: 200px;
+    height: fit-content;
+    padding: 25px;
+    color: white;
+    left: 40%;
+    right: 40%;
+    width: 20%;
+    text-align: center;
+  }
+  #close{
+    font-size: 1.5em;
+display: block;
+width: 100%;
+text-align: right;
+  }

@@ -22,13 +22,15 @@ from django.conf import settings
 
 
 api_patterns = [
-   path("file", Api.show_pdf)
 ]
 
 view_patterns = [
     path("", View.index),
     path("upload", View.upload_file),
-    path("article/<int:id>", View.show_pdf)
+    path("article/<int:id>", View.show_pdf),
+    path('register', View.register),
+    path('login', View.login),
+    path('logout', View.logout)
 ]
 
 

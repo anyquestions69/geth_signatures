@@ -1,4 +1,13 @@
 <nav>
     <a href="/"><i class="fa-solid fa-house"></i> Главная</a>
+    {% if  not auth %}
+    <a href="/register">Создать кошелек <i class="fa-solid fa-user-plus"></i></a>
+    <a href="/login">Авторизация <i class="fa-solid fa-user-check"></i></a>
+
+    {% else %}<a href="/logout">Выйти <i class="fa-solid fa-user-xmark"></i></a>
+    {% endif %}
+
+    
     <a href="/upload">Загрузить документ <i class="fa-solid fa-upload"></i></a>
+
 </nav>
