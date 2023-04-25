@@ -12,3 +12,4 @@ admin.getPeers
 admin.peers
 admin.getNodeInfo
 admin.getNodeInfo()
+exit()
