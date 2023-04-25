@@ -1,13 +1,46 @@
-<nav>
-    <a href="/"><i class="fa-solid fa-house"></i> Главная</a>
-    {% if  not auth %}
-    <a href="/register">Создать кошелек <i class="fa-solid fa-user-plus"></i></a>
-    <a href="/login">Авторизация <i class="fa-solid fa-user-check"></i></a>
+{% load static %}
+<header class="p-3 mb-3 border-bottom   nav" >
+    <div class="container" >
+      <div class="d-flex flex-wrap align-items-center justify-content-between ">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+          <img src="{% static "logo.png" %}" width="45" height="45" alt="">
+        </a>
 
-    {% else %}<a href="/logout">Выйти <i class="fa-solid fa-user-xmark"></i></a>
-    {% endif %}
+        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 text-primary-emphasis">
+          <li class="nav-item"><a href="/" class="nav-link px-2 ">Главная</a></li>
+          {% if  not client %}
+          <li><a href="/login" class="nav-link px-2 ">Авторизация</a></li>
+          <li><a href="/register" class="nav-link px-2 link-body-emphasis ">Регистрация</a></li>
+          {% else %}
+          {% if client.role.name == 'admin' %}
+          <li><a href="/tables" class="nav-link px-2 link-body-emphasis ">Ведомости</a></li>
+          
+          <li><a href="/upload" class="nav-link px-2 link-body-emphasis ">Загрузить документ</a></li>
+          {% endif %}
+          {% endif %}
+        </ul>
 
-    
-    <a href="/upload">Загрузить документ <i class="fa-solid fa-upload"></i></a>
-
-</nav>
+        <form action="/" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+            {{short.form}}
+       
+        </form>
+        <button type="button" class="btn btn-primary" >
+            Уведомления <span class="badge text-bg-secondary">4</span>
+          </button>
+        <div class="dropdown">
+            {% if  auth %}
+            <button class="btn btn-secondary dropdown-toggle" style="background-color: #d63384; border:none" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+             Мой аккаунт
+            </button>
+            <ul class="dropdown-menu">
+              {% if client.role.name == 'admin' %}
+              <li><a class="dropdown-item" href="/tables">Ведомости</a></li>
+              {% endif %}
+              <li><a class="dropdown-item" href="/account">Редактировать</a></li>
+              <li><a class="dropdown-item" href="/logout">Выйти</a></li>
+            </ul>
+            {% endif %}
+          </div>
+      </div>
+    </div>
+  </header>

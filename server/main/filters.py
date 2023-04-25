@@ -6,8 +6,8 @@ class FileFilter(django_filters.FilterSet):
     CHOICES = (
         ('asc', 'Сначала новые'),
         ('desc', 'Сначала старые'),
-        ('rate_asc', 'Возрастанию расписавшихся'),
-        ('rate_desc', 'Убыванию расписавшихся')
+        ('signed_asc', 'Возрастанию расписавшихся'),
+        ('signed_desc', 'Убыванию расписавшихся')
     )
     ordering = django_filters.ChoiceFilter(label='Сортировать по', choices=CHOICES, method='filter_by_order')
     def filter_by_order(self, queryset, name, value):
@@ -28,7 +28,7 @@ class FileFilter(django_filters.FilterSet):
         fields = ['name']
 
 class ShortFilter(django_filters.FilterSet):
-    name = django_filters.CharFilter(lookup_expr='icontains', label='', widget=TextInput(attrs={'placeholder': 'Введите название'} ))
+    name = django_filters.CharFilter(lookup_expr='icontains', label='', widget=TextInput(attrs={'placeholder': 'Введите название', 'class':'form-control'} ))
     class Meta:
         model = Files
         fields = ['name']

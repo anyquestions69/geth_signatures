@@ -22,6 +22,7 @@ from django.conf import settings
 
 
 api_patterns = [
+    path("check/<int:fid>/<int:uid>", Api.checkSig)
 ]
 
 view_patterns = [
@@ -30,7 +31,11 @@ view_patterns = [
     path("article/<int:id>", View.show_pdf),
     path('register', View.register),
     path('login', View.login),
-    path('logout', View.logout)
+    path('logout', View.logout),
+    path('account', View.account),
+    path('tables', View.tables),
+    path('table/<int:id>', View.show_table)
+
 ]
 
 

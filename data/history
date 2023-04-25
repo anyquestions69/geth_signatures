@@ -4,3 +4,11 @@ admin
 admin.protocols
 admin.nodeInfo
 admin.nodeInfo.protocols.eth.config
+admin.node_info()
+admin
+getPeers
+admin.getPeers()
+admin.getPeers
+admin.peers
+admin.getNodeInfo
+admin.getNodeInfo()

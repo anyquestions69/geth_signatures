@@ -69,3 +69,4 @@ $("#close").addEventListener("click", () => {
 
   $('#alert').style.display = "none"
 })
+

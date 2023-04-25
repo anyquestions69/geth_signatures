@@ -1,11 +1,30 @@
+@font-face {
+    font-family: 'Roboto';
+    font-weight: 100;
+    src:  url('/static/Roboto/Roboto-Thin.ttf') format('truetype');
+    
+}
+@font-face {
+    font-family: 'Roboto';
+    font-weight:normal;
+    src:  url('/static/Roboto/Roboto-Light.ttf') format('truetype'),;
+    
+}
+@font-face {
+    font-family: 'Roboto';
+    font-weight: bold;
+    src:  url('/static/Roboto/Roboto-Medium.ttf') format('truetype'),;
+    
+}
 *{
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-
 }
+
 body{
-    background: #f7f9fb;;
+    background: #f7f9fb;
+    font-family: 'Roboto', sans-serif;
 }
 a{
     text-decoration: none;
@@ -14,6 +33,9 @@ a{
 .container{
     background: #f7f9fb;;
     width: 100%;
+}
+#content{
+    font-weight: lighter;
 }
 main{
     margin: 0 auto;
@@ -26,6 +48,7 @@ main{
     display: flex;
     margin-top: 25px;
     align-items: center;
+    font-weight: lighter;
 }
 .res_data{
     width: 70%;
@@ -37,13 +60,14 @@ main{
 .info-top{
     width: 30%;
     text-align: end;
+    font-weight: normal;
 }
 .address{
 
     font-style: italic;
 }
 .res_id{
-    font-size: bold;
+    font-weight: normal;
     font-size: 1.2em;
     color:rgb(12, 190, 15);
     margin: 7px 0;
@@ -162,7 +186,9 @@ button:hover{
     width: 100%;
     text-align: left;
     border-collapse: collapse;
+    font-weight: lighter;
 }
+
 #tableSigners th, #tableSigners td{
     border: 1px solid #ddd;
   padding: 8px;
@@ -219,7 +245,7 @@ i{color:black;}
     background:rgba(6,88,148,0.15)
 }
 
-ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
+ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0;font-weight: normal; }
       ul#tabs li { display: inline; }
       ul#tabs li a { color: #36bdff; background-color: #fff; border: 1px solid #36bdff; border-bottom: none; padding: 0.3em; text-decoration: none; }
       ul#tabs li a:hover { background-color: #f1f0ee; }
@@ -237,6 +263,7 @@ ul#tabs { list-style-type: none; margin: 30px 0 0 0; padding: 0 0 0.3em 0; }
     background: #36bdff;
     color: white;
   font-size: 1.1em;
+  font-weight: normal;
   }
 
   nav a{

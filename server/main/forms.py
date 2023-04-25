@@ -1,6 +1,6 @@
 from django import forms
 from .models import Files, User
-from django.forms import TextInput, PasswordInput
+from django.forms import TextInput, PasswordInput, FileInput
 
 
 class UploadFileForm(forms.ModelForm):
@@ -8,7 +8,8 @@ class UploadFileForm(forms.ModelForm):
    class Meta:
       model = Files
       widgets = {
-            'name': TextInput(attrs={'placeholder': 'Название статьи'}),
+            'name': TextInput(attrs={'placeholder': 'Название статьи', 'class':'form-control'}),
+            'file': FileInput(attrs={'class':'form-control'}),
         }
       fields = ['name','file']
       labels = {
@@ -21,7 +22,7 @@ class UserForm(forms.ModelForm):
    class Meta:
       model = User
       widgets = {
-            'name': TextInput(attrs={'placeholder': 'Фамилия Имя Отчество'}),
+            'name': TextInput(attrs={'placeholder': 'Фамилия Имя Отчество', 'class': 'form-control'}),
            
         }
       fields = ['name']
@@ -34,7 +35,7 @@ class LogForm(forms.ModelForm):
    class Meta:
       model = User
       widgets = {
-            'wallet': TextInput(attrs={'placeholder': 'Адрес кошешлька'}),
+            'wallet': TextInput(attrs={'placeholder': 'Адрес кошешлька', 'class':'form-control'}),
            
         }
       fields = ['wallet']

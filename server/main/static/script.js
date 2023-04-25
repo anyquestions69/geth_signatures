@@ -16,5 +16,8 @@ $(document).ready(function () {
         $(this).closest('.input-file').find('.input-file-text').html(file.name);
     
     });
-    
+    $("a.check").on('click', (event)=>{
+        console.log(event)
+    })
+    var elements = document.getElementsByClassName('check')
 });
