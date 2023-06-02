@@ -15,8 +15,6 @@ adminRole  = Role.objects.get_or_create(name='admin')
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 w3 = Web3(Web3.IPCProvider(BASE_DIR / 'data/geth.ipc'))
 
-
-
 class Web3Error(Exception):
     pass
 
@@ -67,7 +65,8 @@ class View():
             client=False
         for file in page_obj:
             file.signed= Signature.objects.filter(file=file).count()
-        return render(request, 'index.html', {"files":page_obj,  "short": filter_short,'auth':auth, 'total':total, 'client':client  })
+        notif = Notification.objects.filter(user=client)
+        return render(request, 'index.html', {"files":page_obj,  "short": filter_short,'auth':auth, 'total':total, 'client':client, 'notify':notif  })
     
     def upload_file(request):
         auth = request.session.get('wallet', False)
@@ -83,13 +82,16 @@ class View():
                         notify = Notification.objects.all()
                         users = User.objects.all()
                         for us in users:
-                            notify = Notification()
-                            notify.file = file
-                            notify.user = us
+                            notify = Notification.objects.create(
+                            file = file,
+                            user = us,
+                            rate = 1
+                            )
                         return HttpResponseRedirect('/')
                 else:
                     form = UploadFileForm
-                return render(request, 'upload2.html', {'form': form, 'auth':auth, 'client':client, 'short':filter_short})
+                    notif = Notification.objects.filter(user=client)
+                return render(request, 'upload2.html', {'form': form, 'auth':auth, 'client':client, 'short':filter_short, 'notify':notif})
             
         except User.DoesNotExist:
             client=False
@@ -100,15 +102,12 @@ class View():
     def show_pdf(request, id):
         errors=[]
         auth = request.session.get('wallet', False)
-        try:
-            client = User.objects.get(wallet=auth)
-        except User.DoesNotExist:
-            client=False
         files = Files.objects.all().order_by('-id')
         filter_short = ShortFilter(request.GET, queryset=files)
         filename = Files.objects.get(id=id)
-        if request.method == 'POST':
-            try:
+        try:
+            client = User.objects.get(wallet=auth)
+            if request.method == 'POST':
                 user = User.objects.get(wallet=auth)
                 exist = Signature.objects.filter(file = filename, user=user).exists()
                 if exist:
@@ -122,26 +121,27 @@ class View():
                     if(filename.signers ==User.objects.all()):
                         filename.completed=True
                     filename.save()
-            except User.DoesNotExist:
-                return HttpResponseRedirect('/login')
-            except ValueError:
-                errors.append('Неверная секретная фраза')
+                    notif = Notification.objects.filter(user=client, file=filename).delete()
+        except User.DoesNotExist:
+            return HttpResponseRedirect('/login')
+        except ValueError:
+            errors.append('Неверная секретная фраза')
+        except User.DoesNotExist:
+            client=False
         users = User.objects.all().order_by('name')
         signs = Signature.objects.filter(file=filename)
         client_signed= ''
-        for us in users:
-            us.signed=False
-            for sgn in signs:
-                if sgn.user.id==us.id:
-                    if sgn.user.wallet==auth:
-                        client_signed=sgn.user.wallet
-                    us.signed = True
-                    break
+        for sgn in signs:
+            if sgn.user.id==client.id:
+                client_signed=sgn.user.wallet
+                break
+        notif = Notification.objects.filter(user=client)
         return render(request, 'article.html', {'filename': filename, 
                                                 'title':filename.name, 
                                                 'users':users, 
                                                 'errors':errors, 
-                                                'client_signed':client_signed, 'auth':auth, 'short':filter_short, 'client':client})
+                                                'client_signed':client_signed, 'auth':auth, 
+                                                'short':filter_short, 'client':client, 'notify':notif})
     
     def login(request):
         errors=[]
@@ -209,7 +209,8 @@ class View():
             user = User.objects.get(wallet=auth)
             files = Files.objects.all().order_by('-id')
             filter_short = ShortFilter(request.GET, queryset=files)
-            return render(request, 'user.html', {'user':user, 'auth':auth,'short':filter_short, 'client':user})
+            notif = Notification.objects.filter(user=user)
+            return render(request, 'user.html', {'user':user, 'auth':auth,'short':filter_short, 'client':user, 'notify':notif})
         except User.DoesNotExist:
             return HttpResponseRedirect('/login')
         
@@ -238,7 +239,11 @@ class View():
                     client=False
                 for file in page_obj:
                     file.signed= Signature.objects.filter(file=file).count()
-                return render(request, 'tables.html', {"files":page_obj, "filter": filter, "short": filter_short,'auth':auth, 'total':total, 'client':client  })
+                notif = Notification.objects.filter(user=client)
+                return render(request, 'tables.html', {"files":page_obj, "filter": filter,
+                                                        "short": filter_short,'auth':auth, 'total':total, 
+                                                        'client':client,
+                                                          'notify':notif  })
         except User.DoesNotExist:
             client=False
             return HttpResponseRedirect('/login')
@@ -278,11 +283,14 @@ class View():
                                 client_signed=sgn.user.wallet
                             us.signed = True
                             break
+                notif = Notification.objects.filter(user=client)
                 return render(request, 'info.html', {'filename': filename, 
                                                         'title':filename.name, 
                                                         'users':users, 
                                                         'errors':errors, 
-                                                        'client_signed':client_signed, 'auth':auth, 'short':filter_short, 'client':client})
+                                                        'client_signed':client_signed, 'auth':auth,
+                                                         'notify':notif,
+                                                           'short':filter_short, 'client':client})
             
         except User.DoesNotExist:
             client=False

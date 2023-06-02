@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  {{>meta}}
+    
+    <title>Добавить занятие</title>
+</head>
+<body class="" >
+  {{>nav}}
+    <div class="container bg-primary-subtle">  
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="user-tab" data-bs-toggle="tab" data-bs-target="#user" type="button" role="tab" aria-controls="home" aria-selected="true">Пользователи</button>
+        </li>
+        
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="cat-tab" data-bs-toggle="tab" data-bs-target="#cat" type="button" role="tab" aria-controls="profile" aria-selected="false">Добавить категорию</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="act-tab" data-bs-toggle="tab" data-bs-target="#act" type="button" role="tab" aria-controls="contact" aria-selected="false">Добавить занятие</button>
+        </li>
+        
+        </ul>
+        <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="user" role="tabpanel" aria-labelledby="user-tab">
+            <ul class="list-group" id="user-list"></ul>
+        </div>
+         <div class="tab-pane fade" id="cat" role="tabpanel" aria-labelledby="cat-tab">
+            <form  enctype="multipart/form-data" id="category-form">
+                
+                <div class="form-floating mb-2">
+                    <input type="text" class="form-control" name="title" id="cat-title" placeholder="Название">
+                </div>
+                <div id="catValid" class="text-danger"></div>
+                <div id="cat-success" class="text-success"></div>
+                <button class="w-100 btn btn-lg btn-primary" type="button" id="cat-submit">Выложить</button>
+            </form>
+        </div>
+        <div class="tab-pane fade" id="act" role="tabpanel" aria-labelledby="act-tab">
+            <form  enctype="multipart/form-data" id="activity-form">
+                <div class="form-floating  mb-2">
+                    <select class="form-control" name="" id="act-cat">
+                         <option value="0">Все</option>
+                         {{#each categorys}}
+                        <option value="{{category.id}}">{{category.name}}</option>
+                    {{/each}}
+                    </select>
+                </div>
+                <div class="form-floating mb-2">
+                    <input type="text" class="form-control" name="title" id="act-title" placeholder="Название">
+                </div>
+                <div id="validationServerUsernameFeedback" class="text-danger"></div>
+                <div id="act-success" class="text-success"></div>
+                <button class="w-100 btn btn-lg btn-primary" type="button" id="act-submit">Выложить</button>
+            </form>
+        </div>
+       
+
+       <main class="w-50 m-auto form-signin ">
+   
+    
+ 
+</main>
+         
+              
+              
+                  </div>
+{{>footer}} 
+                  <script type="text/javascript">
+                     $(window).on('load', function() {
+
+
+                        fetch(`/api/users`).then(response => response.json()).then(res=>{
+                          for( let r of res){
+                            let li = `<li class="list-group-item d-flex justify-content-between align-items-center">
+                                        ${r.last_name} ${r.first_name}
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                        <a style="color:white" class="btn btn-secondary">Редактировать</a>
+                                        <a style="color:white" class="btn btn-danger">Удалить</a>
+                                        </div>
+                                    </li>
+                                    `
+                              $('#user-list').append(li)
+                          }
+                        })
+
+
+                      $("#act-submit").on('click',async()=>{ //activity
+                          const user = {
+                            name:$('#act-title').val(),
+                            category:$('#act-cat').val(),
+                          }
+                         let response = await fetch('/api/activities',{
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                          },
+                          body: JSON.stringify(user)
+                         })
+                          let text = await response.text()
+
+                          if(response.ok){
+                            let newactivity = JSON.parse(text )
+                            console.log(newactivity)
+                             $('#validationServerUsernameFeedback').empty()
+                            $('#act-success').empty().append(`<p>Успешно добавлено занятие <a href="/activities/${newactivity.id}">${newactivity.name}</a></p>`)
+                          }else{
+                          console.log(text)
+                           $('#act-success').empty()
+                              $('#validationServerUsernameFeedback').empty().append(`<p>${text}</p>`)
+                              
+                              $('#activity-form>input').css('border-color', 'red'); 
+                          } 
+                      }) //activity
+
+                         $("#cat-submit").on('click',async()=>{ //category
+                          const user = {
+                            name:$('#cat-title').val()
+                          }
+                         let response = await fetch('/api/categories',{
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json;charset=utf-8'
+                          },
+                          body: JSON.stringify(user)
+                         })
+                          let text = await response.text()
+
+                          if(response.ok){
+                            let newactivity = JSON.parse(text )
+                            console.log(newactivity)
+                             $('#catValid').empty()
+                            $('#cat-success').empty().append(`<p>Успешно добавлена категория <a href="/activities/${newactivity.id}">${newactivity.name}</a></p>`)
+                          }else{
+                          console.log(text)
+                           $('#cat-success').empty()
+                              $('#catValid').empty().append(`<p>${text}</p>`)
+                              
+                              $('#category-form>input').css('border-color', 'red'); 
+                          }
+                      })
+
+                     })
+                      
+                 </script>
+                 
+             </body>
+             </html>

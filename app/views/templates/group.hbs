@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  {{>meta}}
+    
+    <title>Группа {{group.id}} </title>
+    <script src="https://api-maps.yandex.ru/2.1/?apikey={{api_key}}&lang=ru_RU" type="text/javascript">
+    </script>
+</head>
+<body class="" >
+  {{>nav}}
+    <div class="container bg-primary-subtle">  
+        
+
+
+      <div class="row">
+        <div class="col-6">
+       
+            
+              <h1 >{{group.activity}} </h1>
+              <p>{{group.cat_1}}</p>
+             <div class="card mb-4">
+            <div class="card-header">
+                Запись
+            </div>
+            <div class="card-body">
+                <p id="schedule">{{group.schedule_1}}</p>
+                {{!-- <table class="mb-2"> 
+                    <tbody>
+                        <tr>    
+                            <td>Ср</td>
+                            <td>14:40-16:30</td>
+                        </tr>
+                    </tbody>
+                </table> --}}
+                <button href="" id="group-1" class="btn btn-primary sign-up">Записаться</button>
+            </div>
+           
+            </div>
+              
+            <h2>Как записаться</h2>
+
+            <p>Записаться на занятия можно, обратившись в территориальный центр социального обслуживания по телефону или, оставив онлайн-заявку на портале.
+
+            Узнать подробности о проекте и о том, как стать его участником можно по телефону горячей линии +7 495 777-77-77
+             </p>
+                       
+
+                        </div>
+        <div class="col-6">
+            <div class="border rounded p-4 mb-4">
+          <h5>Группа {{group.id}}</h5>
+            <small>{{group.okrug}}, {{group.district}}</small>
+            <address id="address">{{group.address}}</address>
+            </div>
+            <div id="map" style="width:100%; height:400px"></div>
+        </div>
+      </div>
+        
+         
+              <input type="hidden" id="id" name="" value="{{group.id}}">
+              
+                  </div>
+{{>footer}}
+                   
+<script>
+    let txt = $('#schedule').text()
+    $('#schedule').text(txt.split(';')[0])
+                   
+</script>
+<script type="text/javascript">
+ymaps.ready(init);
+
+function init() {
+    var geolocation = ymaps.geolocation,
+        myMap = new ymaps.Map('map', {
+            center: [55, 34],
+            zoom: 10
+        }, {
+            searchControlProvider: 'yandex#search'
+        });
+
+    
+    geolocation.get({
+        provider: 'yandex',
+        mapStateAutoApply: true
+    }).then(function (result) {
+        // Красным цветом пометим положение, вычисленное через ip.
+        result.geoObjects.options.set('preset', 'islands#redCircleIcon');
+        result.geoObjects.get(0).properties.set({
+            balloonContentBody: 'Мое местоположение'
+        });
+        myMap.geoObjects.add(result.geoObjects);
+    });
+
+    geolocation.get({
+        provider: 'browser',
+        mapStateAutoApply: true
+    }).then(function (result) {
+        
+        result.geoObjects.options.set('preset', 'islands#blueCircleIcon');
+        multiRoute = new ymaps.multiRouter.MultiRoute({
+            referencePoints: [
+                result.geometry.getCoordinates(),
+                $('#address').text()
+            ],
+            params: {
+                
+                routingMode: 'pedestrian'
+            }
+        }, {
+            // Автоматически устанавливать границы карты так, чтобы маршрут был виден целиком.
+            boundsAutoApply: true
+        });
+        myMap.geoObjects.add(multiRoute);
+        myMap.geoObjects.add(result.geoObjects);
+    });
+    
+
+ymaps.geocode($('#address').text(), {
+        results: 1
+    }).then(function (res) {
+            
+            var firstGeoObject = res.geoObjects.get(0),
+                coords = firstGeoObject.geometry.getCoordinates(),
+                bounds = firstGeoObject.properties.get('boundedBy');
+            firstGeoObject.options.set('preset', 'islands#darkBlueDotIconWithCaption');
+            firstGeoObject.properties.set('iconCaption', firstGeoObject.getAddressLine());
+            myMap.geoObjects.add(firstGeoObject);
+            myMap.setBounds(bounds, {
+                checkZoomRange: true
+            });
+            console.log('Все данные геообъекта: ', firstGeoObject.properties.getAll());
+            console.log('Метаданные ответа геокодера: ', res.metaData);
+            console.log('Метаданные геокодера: ', firstGeoObject.properties.get('metaDataProperty.GeocoderMetaData'));
+            console.log('precision', firstGeoObject.properties.get('metaDataProperty.GeocoderMetaData.precision'));
+            console.log('Тип геообъекта: %s', firstGeoObject.properties.get('metaDataProperty.GeocoderMetaData.kind'));
+            console.log('Название объекта: %s', firstGeoObject.properties.get('name'));
+            console.log('Описание объекта: %s', firstGeoObject.properties.get('description'));
+            console.log('Полное описание объекта: %s', firstGeoObject.properties.get('text'));
+            console.log('\nГосударство: %s', firstGeoObject.getCountry());
+            console.log('Населенный пункт: %s', firstGeoObject.getLocalities().join(', '));
+            console.log('Адрес объекта: %s', firstGeoObject.getAddressLine());
+            console.log('Наименование здания: %s', firstGeoObject.getPremise() || '-');
+            console.log('Номер здания: %s', firstGeoObject.getPremiseNumber() || '-');
+
+        });
+
+}
+</script>
+             </body>
+             </html>

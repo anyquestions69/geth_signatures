@@ -1,0 +1,13 @@
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="/static/dist/js/bootstrap.min.js"></script>
+<script src="/static/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    $( "#search-activities-form" ).on( "submit", function( event ) {
+        event.preventDefault()
+        let act_name = $('#search-activities-input').val()
+        //console.log(act_name)
+        window.location.href=`/?id=${act_name}`
+    })
+</script>
+<script src="/static/dist/js/bootstrap-select.min.js"></script>
