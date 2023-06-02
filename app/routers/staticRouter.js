@@ -1,29 +1,16 @@
 const express = require("express");
 const viewRouter = express.Router();
 var path = require('path');
-//const visit = require('../middleware/visitor.js')
-const groupController = require('../controllers/groupController.js')
-const {Group}=require('../models/user.js')
+const auth = require('../middleware/auth.js')
+const fileController = require('../controllers/fileController.js')
+const {User}=require('../models/user.js')
 const Sequelize = require('sequelize')
 
-viewRouter.get('/',async(req,res)=>{
-    let result = await Group.findAll({attributes: [
-               
-        [Sequelize.fn('DISTINCT', Sequelize.col('cat_1')) ,'cat_1'],
-
-
-    ]})
-    let dst = await Group.findAll({attributes: [
-               
-        [Sequelize.fn('DISTINCT', Sequelize.col('district')) ,'district'],
-
-
-    ]})
+viewRouter.get('/',auth.getUser,async(req,res)=>{
+   console.log(req.user)
         return  res.render('index.hbs', {
-            
-            select:result,
-            district:dst
-            });
+            user:req.user
+        });
 
 })
 viewRouter.get('/test',(req,res)=>{
@@ -32,7 +19,16 @@ viewRouter.get('/test',(req,res)=>{
         host:process.env.HOST
     })
 })
-viewRouter.get('/groups/:id', groupController.viewOne)
+viewRouter.get('/register',(req,res)=>{
+    return res.render('register.hbs')
+})
+viewRouter.get('/login',(req,res)=>{
+    return res.render('login.hbs')
+})
+viewRouter.get('/admin',(req,res)=>{
+    return res.render('admin.hbs')
+})
+viewRouter.get('/files/:id',auth.getUser, fileController.viewOne)
 
 
 

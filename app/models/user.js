@@ -40,10 +40,9 @@ const File = sequelize.define("file", {
     type:Sequelize.TEXT,
   },
   status:{
-    type:Sequelize.BOOLEAN
+    type:Sequelize.BOOLEAN,
+    default:false
   }
-},{
-  timestamps: false
 });
 
 const Signature = sequelize.define("signature", {
@@ -66,7 +65,7 @@ User.belongsToMany(File, {through:Signature})
 
 
 
-sequelize.sync({force: true}).then(async function (result){
+sequelize.sync({force: false}).then(async function (result){
 
 })
 .catch(err=> console.log(err));

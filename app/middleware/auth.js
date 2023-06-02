@@ -1,21 +1,37 @@
 const {User} = require('../models/user')
 const config = process.env;
+const jwt = require('jsonwebtoken')
 
 class Auth{
+    async getUser(req,res,next){
+        const token = req.cookies.user
+        if(token){
+        await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
+            let exists = await User.findOne({where:{id:user.id}})
+            if(exists)
+                req.user = exists
+                
+        })
+        }
+        next()
+    }
     async isAuth(req,res,next){
 
         const token = req.cookies.user
         if (token == null) return res.sendStatus(401)
 
-        jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
+        await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
             console.log(err)
       
             if (err) return res.sendStatus(403)
             let exists = await User.findOne({id:user.id})
-            if(exists)
+            if(exists){
                 req.user = exists
       
-            next()
+                next()
+            }else{
+                return res.sendStatus(403)
+            }
         })
         
     }

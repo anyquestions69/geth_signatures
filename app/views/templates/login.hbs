@@ -96,7 +96,7 @@
     <h1 class="h3 mb-3 fw-normal">Авторизация</h1>
 
     <div class="form-floating">
-        <input type="email" class="form-control" name="email" id="email" placeholder="email">
+        <input type="email" class="form-control" name="wallet" id="wallet" placeholder="Адрес кошелька">
      
     </div>
     <div class="form-floating">
@@ -120,27 +120,36 @@
 </main>
 {{>footer}}
 <script type="text/javascript">
-                     $(window).on('load', function() {
-                      $("#log").on('click',()=>{
-                          const user = {
-                            email:$('#email').val(),
-                            password:$('#password').val()
-                          }
-                         fetch('/api/auth/login',{
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json;charset=utf-8'
-                          },
-                          body: JSON.stringify(user)
-                         }).then(response => {
-                          if(response.ok)
-                          window.location.href ="/"
-                         })
-                          
-                        
-                      })
-                      
-                     });
-                 </script>
+  $(window).on('load', function() {
+  $("#log").on('click',()=>{
+      const user = {
+        wallet:$('#wallet').val(),
+        password:$('#password').val()
+      }
+      fetch('/api/auth/login',{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(user)
+      }).then(response => {
+      if(response.ok){
+      window.location.href ="/"
+      }else{
+        return response.text()
+      }
+       }).then(async(err)=>{ 
+        $('#validationServerUsernameFeedback').empty()
+        $('#validationServerUsernameFeedback').text(err)
+        })
+       
+      
+     
+      
+    
+  })
+  
+  });
+</script>
 </body>
 </html>

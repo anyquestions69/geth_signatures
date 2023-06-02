@@ -1,8 +1,9 @@
 const express = require('express')
 require("dotenv").config();
 const multer = require('multer')
-//const groupRouter = require('./routers/groupRouter.js')
+const fileRouter = require('./routers/fileRouter.js')
 const userRouter = require('./routers/userRouter.js')
+const authRouter = require('./routers/authRouter.js')
 const viewRouter = require('./routers/staticRouter.js')
 const hbs = require('hbs')
 var cookieParser = require('cookie-parser');
@@ -19,23 +20,21 @@ const storageConfig = multer.diskStorage({
         cb(null, "uploads");
     },
     filename: (req, file, cb) =>{
-        cb(null, file.originalname);
+        cb(null, req.body.title+'.'+file.mimetype.split('/')[1]);
     }
 });
-// определение фильтра
 const fileFilter = (req, file, cb) => {
   
-    if(file.mimetype === "image/png" || 
-    file.mimetype === "image/jpg"|| 
-    file.mimetype === "image/jpeg"){
+    if(file.mimetype === "application/pdf"){
         cb(null, true);
     }
     else{
         cb(null, false);
     }
  }
+
  
-app.use(multer({storage:storageConfig, fileFilter: fileFilter, dest:"uploads"}).single("filedata"));
+app.use(multer({storage:storageConfig, fileFilter: fileFilter, dest:"uploads"}).single("file"));
 
 
 app.set("view engine", "hbs");
@@ -46,10 +45,12 @@ app.use(cors({origin:'*'}))
 app.use(cookieParser());
 app.use(jsonParser)
 app.use("/static",express.static(__dirname + "/views/static"))
+app.use("/uploads",express.static(__dirname + "/uploads"))
 
 
 api.use('/users', userRouter)
-
+api.use('/files', fileRouter)
+api.use('/auth', authRouter)
 
 app.use('/api', api)
 app.use('/', viewRouter)
