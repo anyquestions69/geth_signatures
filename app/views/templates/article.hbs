@@ -2,15 +2,19 @@
 <html lang="en" data-bs-theme="auto" >
 <head>
     {{>meta}}
-    <title>{{title}}</title>
+    <title>{{file.name}}</title>
 </head>
 <body class="" >
   {{>nav}}
     <div class="container bg-primary-subtle">  
             <div class="d-flex flex-wrap align-items-center justify-content-between">
-              <h3 class="my-0">{{title}}<span class="badge text-white bg-success">Подписал</span>
-                  <span class="badge text-white bg-danger">Не подписал</span>
+              <h3 class="my-0">{{file.name}}{{#if user}} {{#if isSigned}}<span class="badge text-white bg-success">Подписал</span> {{else}}
+                  <span class="badge text-white bg-danger">Не подписал</span>{{/if}}{{/if}}
               </h3>
+              {{#if user}}
+              {{#if isSigned}}
+             
+              {{else}}
              <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                
                 <div class="input-group">
@@ -19,10 +23,12 @@
                 
                 </div>
                 <div class="btn-group" role="group" aria-label="First group">
-                  <button type="submit" class="btn btn-outline-primary" >Подписать</button>
+                  <button type="button" id="sign-article" class="btn btn-outline-primary" >Подписать</button>
                 </form> 
                 </div>
               </div> 
+              {{/if}}
+              {{/if}}
               </div>
             
               <div class="modal fade in"  id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -48,23 +54,27 @@
      {{>footer}} 
 
 
-     <!--  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-        <div class="toast-body">
-          Вы не расписались в ведомости
-          <div class="mt-2 pt-2 border-top">
-            <button type="button" class="btn btn-primary btn-sm">Расписаться</button>
-            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="toast">Закрыть</button>
-          </div>
-        </div>
-      </div> -->
-      <script type="text/javascript">
-        $(window).on('load', function() {
-            $('#exampleModal').modal('show');
+    <input type="hidden" id="fileid" value="{{file.id}}">
+<script type="text/javascript">
+  $(window).on('load', function() {
+    $('#sign-article').on('click', ()=>{
+       const formData = new FormData();
+        
+        formData.append("password", $('#id_password').val());
+      fetch(`/api/files/${$('#fileid').val()}`, {
+        method:'POST',
+        body:formData
+      }).then(r=>{r.text()}).then(str=>{
+          $('#exampleModal').modal('show');
             $('#closeModal').on('click', ()=>{
                 $('#exampleModal').modal('hide');
             })
-        });
-    </script>
+      })
+    })
+    
+      
+  });
+</script>
     
 </body>
 </html>

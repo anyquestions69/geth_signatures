@@ -9,45 +9,60 @@
   {{>nav}}
     <div class="container bg-primary-subtle">  
      
-            <form  enctype="multipart/form-data" id="file-form">
+     
+           
+      <div class="my-3 p-3 bg-body rounded shadow-sm border">
+        <h6 class="border-bottom pb-2 mb-0">Выложить статью</h6>
+       
+          <form  enctype="multipart/form-data" id="file-form">
                 
                 <div class="form-floating mb-2">
                     <input type="text" class="form-control" name="title" id="file-title" placeholder="Название">
                 </div>
-                 <div class="form-floating mb-2">
+                 <div class="form-floating mb-2 w-20">
                     <input type="file" class="form-control" name="file" id="file-file" placeholder="Файл">
                 </div>
                 <div id="validationServerUsernameFeedback" class="text-danger"></div>
                 <div id="file-success" class="text-success"></div>
                 <button class="w-100 btn btn-lg btn-primary" type="button" id="file-submit">Выложить</button>
-            </form>
-      
-       
-
-       
-         
+          </form>
+      </div>
+      <div class="my-3 p-3 bg-body rounded shadow-sm border" >
+        <h6 class="border-bottom pb-2 mb-0">Пользователи</h6>
+        <div id="users">
+   
+          
+        </div>
+       <nav aria-label="Page navigation example" class="text-center my-4">
+  <ul class="pagination d-flex justify-content-center" id="pagination-users">
+   
+  </ul>
+</nav>
+      </div>
+      <div class="my-3 p-3 bg-body rounded shadow-sm border">
+        <h6 class="border-bottom pb-2 mb-0">Приказы</h6>
+        <div id="files">
+   
+          
+        </div>
+       <nav aria-label="Page navigation example" class="text-center my-4">
+          <ul class="pagination d-flex justify-content-center" id="pagination-files">
+          
+          </ul>
+        </nav>
+          
+      </div>
               
               
                   </div>
 {{>footer}} 
 <script type="text/javascript">
+
     $(window).on('load', function() {
 
 
-      fetch(`/api/users`).then(response => response.json()).then(res=>{
-        for( let r of res){
-          let li = `<li class="list-group-item d-flex justify-content-between align-items-center">
-                      ${r.wallet} ${r.name}
-                      <div class="btn-group" role="group" aria-label="Basic example">
-                      <a style="color:white" class="btn btn-secondary">Редактировать</a>
-                      <a style="color:white" class="btn btn-danger">Удалить</a>
-                      </div>
-                  </li>
-                  `
-            $('#user-list').append(li)
-        }
-      })
-
+      getUsers(1)
+      getFiles(1)
 
     $("#file-submit").on('click',async()=>{ //file
         const formData = new FormData();

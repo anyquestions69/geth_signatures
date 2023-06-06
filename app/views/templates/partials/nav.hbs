@@ -2,9 +2,9 @@
     <div class="container" >
       <div class="d-flex flex-wrap align-items-center justify-content-between ">
         <div class="d-flex justify-content-between">
-        {{!-- <a href="/" class="d-flex flex-wrap align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-          <img src="logo.png" width="45" height="45" alt="">
-        </a> --}}
+        <a href="/" class="d-flex flex-wrap align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
+          <img src="/static/img/logo.png" width="45" height="45" alt="">
+        </a>
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0 text-primary-emphasis">
           <li class="nav-item"><a href="/" class="nav-link px-2 ">Главная</a></li>
@@ -23,13 +23,19 @@
         <div class="input-group">
         <form class="mx-1" role="search" id="search-activities-form">
             <input type="text" class="form-control" id="search-activities-input" placeholder="Поиск">
-        <ul class="dropdown-menu">
-  <li><span class="dropdown-item-text">Dropdown item text</span></li>
-  <li><a class="dropdown-item" href="#">Action</a></li>
-  <li><a class="dropdown-item" href="#">Another action</a></li>
-  <li><a class="dropdown-item" href="#">Something else here</a></li>
-</ul>
+       
         </form>
+        {{#if user}}
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" id="dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{user.name}}
+          </button>
+          <ul class="dropdown-menu" id="dropdown-menu">
+            <li><a class="dropdown-item" href="/users/{{user.id}}">Учетная запись</a></li>
+            <li><a class="dropdown-item" href="/api/auth/logout">Выйти</a></li>
+          </ul>
+        </div>
+        {{/if}}
        </div>
           </div>
       </div>

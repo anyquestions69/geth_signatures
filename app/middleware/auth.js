@@ -5,11 +5,13 @@ const jwt = require('jsonwebtoken')
 class Auth{
     async getUser(req,res,next){
         const token = req.cookies.user
+        
         if(token){
         await jwt.verify(token, process.env.TOKEN_SECRET, async(err, user) => {
             let exists = await User.findOne({where:{id:user.id}})
             if(exists)
                 req.user = exists
+            
                 
         })
         }
@@ -24,10 +26,10 @@ class Auth{
             console.log(err)
       
             if (err) return res.sendStatus(403)
-            let exists = await User.findOne({id:user.id})
+            let exists = await User.findOne({where:{id:user.id}})
             if(exists){
                 req.user = exists
-      
+                console.log(req.user) 
                 next()
             }else{
                 return res.sendStatus(403)

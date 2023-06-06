@@ -21,8 +21,6 @@ const User = sequelize.define("user", {
       type:Sequelize.BOOLEAN,
       default:false
     }
-  },{
-    timestamps: false
   });
 
 const File = sequelize.define("file", {
@@ -56,8 +54,6 @@ const Signature = sequelize.define("signature", {
     type:Sequelize.TEXT,
 
   }
-},{
-  timestamps: false
 });
 
 File.belongsToMany(User, {through:Signature})

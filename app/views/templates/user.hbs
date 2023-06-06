@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  {{>meta}}
+    
+    <title>{{user.name}}</title>
+</head>
+<body class="" >
+  {{>nav}}
+    <div class="container bg-primary-subtle">  
+     
+        <div class="row justify-content-md-center">
+        <div class="col col-sm-4">
+            <h2>Личный кабинет</h2>
+            <form action="" method="post">
+            <label >Логин: <p>{{user.wallet}} </p>
+            </label>
+            <label for="name" style="text-align: left;">ФИО: <input type="text" name="name" class="form-control" value="{{user.name}}"> </p>
+            <button class="btn-primary btn" type="submit">Сохранить изменения</button>
+          </form>
+        </div>
+        </div>
+    </div>
+               <!--  <div class="card">
+                    <div class="col-2">
+                    <div class="general">
+                        <h2> {{user.name}} </h2>
+                    </div>
+                       
+                      </div>
+                        <div class="col-2"> <div class="info-rating">Кошелек: {{user.wallet}} </div> <canvas id="myChart"></canvas></div>
+                       
+            </div> -->
+          
+{{>footer}} 
+
+
+   
+    
+</body>
+</html>
