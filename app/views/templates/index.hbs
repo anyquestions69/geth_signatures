@@ -18,62 +18,6 @@
                     <input type="text" class="form-control" name="title" id="filter-name" placeholder="Название активности или номер группы">
                 </div>
                 
-                <div class="form-floating mb-3">
-                  <label for="cat_1">Направление</label>
-                 <select id="cat_1" class="selectpicker multi-select form-control" title="Выберите направление" multiple data-live-search="true">
-                 {{#each select}}
-                    <option value="{{this.cat_1}}">{{this.cat_1}}</option>
-                 {{/each}}
-                  </select>
-                </div>
-
-                 <div class="form-floating mb-3">
-                  <label for="type">Формат занятий</label>
-                    <select class="form-control" name="type" id="type">
-                      <option value="0">Все</option>
-                      <option value="1">Оффлайн</option>
-                      <option value="2">Онлайн</option>
-                    </select>
-                </div>
-                <div class="form-floating mb-3">
-                  <label for="district">Район</label>
-                  <select id="district" class=" form-control" title="Выберите район"  data-width="100px" data-live-search="true">
-                      <option value="0">Все</option>
-                  </select>
-                </div>
-                 <div class="form-floating mb-3" id="weekday">
-                  <label for="weekday" class="btn btn-primary color-white">
-                      Выбрать дни недели
-                    </label>
-                    
-                  <div class="" id="weekdayCol">
-                    
-                  <div class="form-check">
-                    <input class="form-check-input week" type="checkbox" id="monday" name="vehicle1" value="Пн">
-                    <label class="form-check-label" for="monday">Понедельник</label></div><div class="form-check">
-                    <input class="form-check-input week" type="checkbox" id="tuesday" name="vehicle1" value="Вт">
-                    <label class="form-check-label" for="tuesday">Вторник</label></div><div class="form-check">
-                    <input class="form-check-input week" type="checkbox" id="wednesday" name="vehicle1" value="Ср">
-                    <label class="form-check-label" for="wednesday">Среда</label></div><div class="form-check">
-                    <input class="form-check-input week" type="checkbox" id="thursday" name="vehicle1" value="Чт">
-                    <label class="form-check-label" for="thursday">Четверг</label></div><div class="form-check">
-                    <input class="form-check-input week" type="checkbox" id="friday" name="vehicle1" value="Пт">
-                    <label class="form-check-label" for="friday">Пятница</label></div><div class="form-check">
-                    <input class="form-check-input week" type="checkbox" id="saturday" name="vehicle1" value="Сб">
-                    <label class="form-check-label" for="saturday">Суббота</label></div><div class="form-check">
-                    <input class="form-check-input week" type="checkbox" id="sunday" name="vehicle1" value="Вс">
-                    <label class="form-check-label" for="sunday">Воскресенье</label></div>
-                </div>
-                </div>
-                <div class="form-floating mb-3">
-                  <div class="form-check">
-                    <input class="form-check-input"  type="checkbox" value="" id="status" > 
-                    <label class="form-check-label" for="status">
-                      Группа занимается
-                    </label>
-                  </div>
-
-                </div>
                
                 <div id="validationServerUsernameFeedback" class="text-danger"></div>
                 <div id="act-success" class="text-success"></div>
@@ -105,7 +49,11 @@
 $(window).on('load', function() {
   let urlParams = new URLSearchParams(window.location.search);
   const page = urlParams.get('page')||1;
-  getData(page)    
+  const name = urlParams.get('name')
+  getData(page, name||'')    
+  $('#filter-name').on('keyup', async()=>{
+    getData(page, $('#filter-name').val()||'')
+  })
 });
 </script>
                  

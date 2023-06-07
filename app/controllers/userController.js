@@ -36,13 +36,15 @@ class Manager{
             if(re.test(name) | re.test(password))
                 return res.status(401).send('Не пытайтесь взломать нас')
             const wallet = await web3.eth.personal.newAccount(password)
-            console.log(wallet)
+            let exists = await User.findOne({where:{name:name}})
+            if(exists)
+                return res.status(401).send('Пользователь с таким именем уже существует. Попросите администратора удалить Ваш старый аккаунт прежде чем создавать новый.')
             let user = await User.create({
                 name:name,
                 wallet:wallet,
                 
             })
-            const token = jwt.sign({id:user.id, admin:user.isAdmin}, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+            const token = jwt.sign({id:user.id, admin:user.isAdmin}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
             return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(user)
         }catch(e){
             return res.status(404).send(e)
@@ -59,9 +61,11 @@ class Manager{
             wallet:wallet
             }
             })
+            if(!user)
+                return res.status(401).send('Такого кошелька не существует')
             let auth = await web3.eth.personal.unlockAccount(user.wallet, password)
             if(auth){
-                const token = jwt.sign({id:user.id, admin:user.isAdmin}, process.env.TOKEN_SECRET, { expiresIn: '1800s' });
+                const token = jwt.sign({id:user.id, admin:user.isAdmin}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
                 
                 return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(auth)
             }else{
@@ -77,7 +81,6 @@ class Manager{
     }
 
     async viewOne(req,res){
-        console.log(req.user) 
         if(Number.isInteger(parseInt(req.params['id']))){
             return res.render('user.hbs', {
                 

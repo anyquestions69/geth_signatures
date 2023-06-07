@@ -1,16 +1,30 @@
 const {File, User, Signature} = require('../models/user')
-const { Op } = require("sequelize");
+const { Op, QueryTypes } = require("sequelize");
 const sequelize = require('../config/database')
-const multer = require('multer')
 var Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
+var net = require('net');
+var web3 = new Web3(new Web3.providers.IpcProvider(__dirname+'/../../data/geth.ipc', net));
 
 
-const getPagingData = (data, page, limit) => {
+const getUserPagingData = (data, page, limit, uid) => {
     const { count: totalItems, rows: files } = data;
+    for(let i=0;i<files.length;i++){
+        files[i].signed=0
+        if(files[i].users.some(u=>u.id==uid)){
+            files[i].signed=1
+            continue
+        }
+        console.log(files[i].signed)
+    }
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems/ limit);
+    return { totalItems, files, totalPages, currentPage };
+  };
+
+  const getPagingData = (data, page, limit) => {
+    let { count: totalItems, rows: files } = data;
     const currentPage = page ? +page : 0;
     const totalPages = Math.ceil(totalItems / limit);
-  
     return { totalItems, files, totalPages, currentPage };
   };
 
@@ -25,38 +39,81 @@ class Manager{
     }
 
     async getAll(req,res){
-        let {page} = req.query
+        let {page, name} = req.query
         let users = await User.count()
         let result
+        let resData
+        let filter=[]
+        if(name){
+            filter.push({name:{
+                [Op.substring]: name
+            }})
+        }
         if(req.user){
             result = await File.findAndCountAll( {
                 include:[{
-                    model:User,
+                    model:User,/* 
                     where:{
-                           id:{[Op.ne]:req.user.id}
-                     }, required:true,
+                        id:{
+                            [Op.ne]:parseInt(req.user.id)
+                        }
+                    },
                     through:{
-                        id:{[Op.ne]:req.user.id}
-                    , required:true,
-                    }                                              
-                    
+                        where:{
+                        userId:{
+                            [Op.ne]:parseInt(req.user.id)
+                        }
+                        }
+                    },required:false */
                 }],
+                where:{
+                    [Op.and]:[filter[0],{status:false}]
+                },
+                required:false,
                 offset: page>=1?((page-1)*10):0, limit: 10,
                 order: [
-                    [User, Signature, 'id', 'DESC']
+                    [ 'id', 'DESC']
                   ]})
+            resData= getUserPagingData(result, page, 10, req.user.id)
+            //resData= getPagingData(result, page, 10)
         }else{
             result = await File.findAndCountAll( {
             include:[{
                 model:User,
                 through:{}
             }],
+            where:{
+                [Op.and]:[filter[0],{status:false}]
+            },
             offset: page>=1?((page-1)*10):0, limit: 10,
             order: [
-                [User, Signature, 'id', 'DESC']
+                [ 'id', 'DESC']
               ]})
+            resData= getPagingData(result, page, 10)
         }
-        let resData= getPagingData(result, page, 10)
+        
+        resData.userCount=users
+        return res.send(resData)
+    }
+
+    async adminGetAll(req,res){
+        let {page} = req.query
+        let users = await User.count()
+        let result
+        let resData
+
+        result = await File.findAndCountAll( {
+        include:[{
+            model:User,
+            through:{}
+        }],
+        offset: page>=1?((page-1)*10):0, limit: 10,
+        order: [
+            [ 'id', 'DESC']
+            ]})
+        resData= getPagingData(result, page, 10)
+        
+        
         resData.userCount=users
         return res.send(resData)
     }
@@ -104,13 +161,18 @@ class Manager{
             console.log(password)
             console.log(req.user)
             let usr = await User.findOne({where:{id:req.user.id}})
+            let users = await User.count()
             if(!usr)return res.send('Необходимо авторизоваться')
-            let file = await File.findOne({where:{id:req.params['id']}})
+            let file = await File.findOne({where:{id:req.params['id']}, include:{model:User}})
             var exists = await file.hasUser(usr)
             if(exists)
                 return res.status(404).send('Вы уже расписались!')
             const signature = await web3.eth.personal.sign(file.name, req.user.wallet, password )
             let result = await file.addUser(req.user, {through:{hash:signature}})
+            if(file.users.length+1==users){
+                file.status=true
+            }
+            await file.save()
             if(result){
                 return res.send('Вы успешно расписались!')
             }

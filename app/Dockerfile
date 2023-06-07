@@ -1,4 +1,4 @@
-FROM node:16.10.0-alpine 
+FROM node:16.14.0-alpine 
 RUN apk add --no-cache tzdata
 ENV TZ Europe/Moscow
 ENV NODE_PATH /opt/server/node_modules
@@ -9,7 +9,7 @@ RUN npm i
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 80
 
 CMD [ "npm" ,"run start"]
 

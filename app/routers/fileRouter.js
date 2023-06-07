@@ -4,6 +4,7 @@ const auth = require('../middleware/auth.js')
 const fileRouter = express.Router();
  
 fileRouter.get("/", auth.getUser, fileController.getAll);
+fileRouter.get("/all", auth.isAuth,auth.isAdmin, fileController.adminGetAll);
 fileRouter.get('/:id', fileController.getOne)
 fileRouter.post('/:id', auth.isAuth,fileController.assing)
 fileRouter.post("/", auth.isAuth, auth.isAdmin, fileController.post);

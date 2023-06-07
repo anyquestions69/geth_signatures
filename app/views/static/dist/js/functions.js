@@ -53,7 +53,7 @@ function getDate(today){
   }
   function getFiles(page){
     let params = `/`
-    let url = `/api/files/`
+    let url = `/api/files/all`
     fetch(`${url}?page=${page||1}`).then(response => response.json()).then(res=>{
       console.log(res)
       $('#files').empty()
@@ -98,10 +98,10 @@ function getDate(today){
   })
   }
 
-function getData(page){
-    let params = `/`
+function getData(page, name){
+    let params = `/?name=${name}&`
     let url = `/api/files/`
-    fetch(`${url}?page=${page}`).then(response => response.json()).then(res=>{
+    fetch(`${url}${params}page=${page}`).then(response => response.json()).then(res=>{
   
       $('#list').empty()
       for( let r of res.files){
@@ -119,7 +119,7 @@ function getData(page){
   </div>
   <div class="d-flex w-100 justify-content-between align-items-center">
   
-  <button class='btn btn-primary float-right'>Записаться</button>
+  <button class='btn btn-primary float-right'>Перейти</button>
   </div>
   </a>
                     `
@@ -139,11 +139,11 @@ function getData(page){
       }else{
         $('#pagination').append(` <li class="page-item disabled"><a disabled class="page-link" href="/?page=1">В начало</a></li>
   <li class="page-item active"><a class="page-link" href="${params}page=${res.currentPage}">${res.currentPage||1}</a></li>`)
-        if(res.currentPage!=res.totalPages){
+        /* if(res.currentPage!=res.totalPages){
       $('#pagination').append(` 
       <li class="page-item"><a class="page-link" href="${params}page=${res.currentPage+1}">${res.currentPage+1}</a></li>
       <li class="page-item"><a class="page-link" href="${params}page=${res.totalPages}">В конец</a></li>`)
-      }
+      } */
       }
           
   })

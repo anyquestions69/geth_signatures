@@ -40,7 +40,7 @@
                         <span aria-hidden="true">&times;</span>
                       </button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="errMsg">
                      
                     </div>
                    
@@ -57,19 +57,25 @@
     <input type="hidden" id="fileid" value="{{file.id}}">
 <script type="text/javascript">
   $(window).on('load', function() {
-    $('#sign-article').on('click', ()=>{
+    $('#sign-article').on('click', async ()=>{
        const formData = new FormData();
         
         formData.append("password", $('#id_password').val());
-      fetch(`/api/files/${$('#fileid').val()}`, {
+      let response = await fetch(`/api/files/${$('#fileid').val()}`, {
         method:'POST',
         body:formData
-      }).then(r=>{r.text()}).then(str=>{
+      })
+      let result = await response.text()
+      if(!response.ok){
           $('#exampleModal').modal('show');
+          $('#errMsg').text(result)
             $('#closeModal').on('click', ()=>{
                 $('#exampleModal').modal('hide');
             })
-      })
+      }else{
+        location.reload()
+      }
+      
     })
     
       
