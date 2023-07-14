@@ -15,8 +15,10 @@
             <form action="" method="post">
             <label >Логин: <p>{{user.wallet}} </p>
             </label>
-            <label for="name" style="text-align: left;">ФИО: <input type="text" name="name" class="form-control" value="{{user.name}}"> </p>
-            <button class="btn-primary btn" type="submit">Сохранить изменения</button>
+            <label for="name" style="text-align: left;">ФИО: <input type="text" name="name" id="name" class="form-control" value="{{user.name}}"> </p>
+            <label for="name" style="text-align: left;">Введите пароль для сохранения изменений: <input type="password" id="password" name="password" class="form-control" > </p>
+            <button class="btn-primary btn" id="change" type="button">Сохранить изменения</button>
+            <div id="validationServerUsernameFeedback" class="text-danger"></div>
           </form>
         </div>
         </div>
@@ -35,7 +37,32 @@
 {{>footer}} 
 
 
-   
+<script>
+  $(window).on('load', function() {
+  $("#change").on('click',async()=>{
+      const user = {
+        name:$('#name').val(),
+        password:$('#password').val()
+      }
+      let response = await fetch('/api/users',{
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8'
+      },
+      body: JSON.stringify(user)
+      })
+      let text = await response.text()
+      if(response.ok){
+      window.location.href ="/"
+      }else{
+          $('#validationServerUsernameFeedback').empty().append(`<p>${text}</p>`)
+          
+          $('input[type="password"]').css('border-color', 'red'); 
+      }
+    
+  })
+  })
+</script>
     
 </body>
 </html>

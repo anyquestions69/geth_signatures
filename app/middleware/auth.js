@@ -29,7 +29,6 @@ class Auth{
             let exists = await User.findOne({where:{id:user.id}})
             if(exists){
                 req.user = exists
-                console.log(req.user) 
                 next()
             }else{
                 return res.sendStatus(403)

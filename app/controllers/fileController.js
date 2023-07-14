@@ -118,6 +118,21 @@ class Manager{
         return res.send(resData)
     }
 
+    async checkSignature(req,res){
+        try {
+            let {sig}=req.body
+            let file = await File.findByPk(req.params['id'])
+            if(file){
+                    let result = await web3.eth.personal.ecRecover(file.name, sig)
+                    let user = await User.findOne({where:{wallet:result}})
+                    return res.send({user:user.name, wallet:result})
+            }
+        } catch (error) {
+            return res.status(404).send(error)
+        }
+        
+    }
+
     async post(req, res){
         let file = await File.create({
             name:req.body.title,

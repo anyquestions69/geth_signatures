@@ -25,6 +25,7 @@ function getDate(today){
                 ${r.wallet}
               </p>
               <p class="pb-3 mb-0 small lh-sm"> Зарегистрирован с ${r.date.str}</p>
+              <a href="/api/users/${r.id}/delete">Удалить</a>
             </div>`
                     $('#users').append(li)
           

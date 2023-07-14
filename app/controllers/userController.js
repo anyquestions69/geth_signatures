@@ -31,10 +31,15 @@ class Manager{
 
     async register(req, res){
         try{
-            let {name, password} = req.body
+            let {name, password,repass} = req.body
+            if(name)
+                if(name.replace(' ','')=='')
+                    return res.status(401).send('Заполните ФИО')
             let re = /(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})/g
             if(re.test(name) | re.test(password))
                 return res.status(401).send('Не пытайтесь взломать нас')
+            if(repass!=password)
+                return res.status(401).send('Пароли не совпадают')
             const wallet = await web3.eth.personal.newAccount(password)
             let exists = await User.findOne({where:{name:name}})
             if(exists)
@@ -45,9 +50,9 @@ class Manager{
                 
             })
             const token = jwt.sign({id:user.id, admin:user.isAdmin}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
-            return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(user)
+            return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(user.wallet)
         }catch(e){
-            return res.status(404).send(e)
+            return res.status(404).send('Ошибка')
         }
     }
 
@@ -56,23 +61,23 @@ class Manager{
             let {wallet, password} = req.body
             let re=/^0x[a-fA-F0-9]{40}$/g
             if(!re.test(wallet))
-                return res.status(401).send('Введите валидный адрес кошелька')
+                return res.status(401).send({error:'Введите валидный адрес кошелька'})
             let user = await User.findOne({where:{
             wallet:wallet
             }
             })
             if(!user)
-                return res.status(401).send('Такого кошелька не существует')
+                return res.status(401).send({error:'Такого кошелька не существует'})
             let auth = await web3.eth.personal.unlockAccount(user.wallet, password)
             if(auth){
                 const token = jwt.sign({id:user.id, admin:user.isAdmin}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
-                
+               
                 return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(auth)
             }else{
-                return res.send(404)
+                return res.status(404).send({error:'Неверный пароль'})
             }
         }catch(e){
-            return res.status(404).send(e)
+            return res.status(404).send({error:'Неверный пароль'})
         }
     }
 
@@ -94,6 +99,33 @@ class Manager{
         
     }
 
+    async update(req,res){
+        try {
+            let {name, password} = req.body
+            if(name){
+                if(name.replace(' ','')=='')
+                    return res.status(401).send('Заполните ФИО')
+            }
+            let re = /(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})/g
+            if(re.test(name) | re.test(password))
+                return res.status(401).send('Не пытайтесь взломать нас')
+            
+            let auth = await web3.eth.personal.unlockAccount(req.user.wallet, password)
+            if(auth){
+                let usr = await User.update({name:name},{where:{id:req.user.id}})
+                return res.send(usr)
+            }else{
+                return res.status(404).send('Неверный пароль')
+            }
+        } catch (error) {
+            return res.status(404).send('Неверный пароль')
+        }
+    }
+    async deleteAccount(req,res){
+        let user = await User.destroy({where:{id:req.params['id']}})
+        await web3.eth.accounts.wallet.remove(user.wallet)
+        return res.redirect('/admin')
+    }
     
     
 }

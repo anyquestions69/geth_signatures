@@ -92,7 +92,7 @@
 
    
     <div class="form-floating mb-2">
-        <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Имя">
+        <input type="text" class="form-control" name="first_name" id="first_name" placeholder="Фамилия Имя Отчество">
      
     </div>
     
@@ -121,36 +121,32 @@
 </main>
 {{>footer}}
 <script type="text/javascript">
-                     $(window).on('load', function() {
-                      $("#reg").on('click',async()=>{
-                          const user = {
-                            name:$('#first_name').val(),
-                            password:$('#password').val(),
-                            repass : $('#repass').val(),
-                          }
-                         let response = await fetch('/api/auth/register',{
-                          method: 'POST',
-                          headers: {
-                            'Content-Type': 'application/json;charset=utf-8'
-                          },
-                          body: JSON.stringify(user)
-                         })
-                          let text = await response.text()
-                          if(response.ok){
-                          window.location.href ="/"
-                          }
-                          console.log(text)
-                              $('#validationServerUsernameFeedback').empty().append(`<p>${text}</p>`)
-                              
-                              $('input[type="password"]').css('border-color', 'red'); 
-                         
-                  
-                            
-                          
-                        
-                      })
-                     })
-                      
-                 </script>
+    $(window).on('load', function() {
+    $("#reg").on('click',async()=>{
+        const user = {
+          name:$('#first_name').val(),
+          password:$('#password').val(),
+          repass : $('#repass').val(),
+        }
+        let response = await fetch('/api/auth/register',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json;charset=utf-8'
+        },
+        body: JSON.stringify(user)
+        })
+        let text = await response.text()
+        if(response.ok){
+        window.location.href ="/"
+        }else{
+            $('#validationServerUsernameFeedback').empty().append(`<p>${text}</p>`)
+            
+            $('input[type="password"]').css('border-color', 'red'); 
+        }
+      
+    })
+    })
+    
+</script>
 </body>
 </html>

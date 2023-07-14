@@ -1,4 +1,4 @@
-version: "3.9"
+version: "1.0"
 
 services:
   app:
@@ -34,7 +34,7 @@ services:
     networks:
       - network
     restart: always
-    
+
   geth:
     image: ethereum/client-go
     pull_policy: always
@@ -47,7 +47,7 @@ services:
       - 8546:8546
       - 8551:8551
     volumes:
-      - ${GETH_DATADIR:-/data/geth}:/root/.ethereum
+      - ${GETH_DATADIR:-./data/geth}:/root/.ethereum
     stop_signal: SIGINT
     stop_grace_period: 2m
     healthcheck:
