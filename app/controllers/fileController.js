@@ -2,8 +2,7 @@ const {File, User, Signature} = require('../models/user')
 const { Op, QueryTypes } = require("sequelize");
 const sequelize = require('../config/database')
 var Web3 = require('web3');
-var net = require('net');
-var web3 = new Web3(new Web3.providers.IpcProvider(__dirname+'/../../data/geth.ipc', net));
+var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'));
 
 
 const getUserPagingData = (data, page, limit, uid) => {

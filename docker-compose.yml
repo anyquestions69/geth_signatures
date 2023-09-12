@@ -14,7 +14,7 @@ services:
       - network
     env_file:
       - ./app/.env
-    command: nodemon index
+    command: npm run start
 
   # Контейнер с базой данных
   db:
@@ -57,7 +57,7 @@ services:
       retries: 5
     command:
       - --http
-      - --http.api=eth,net,web3,engine,admin
+      - --http.api=eth,net,web3,personal,admin
       - --http.addr=0.0.0.0
       - --http.vhosts=*
       - --http.corsdomain=*

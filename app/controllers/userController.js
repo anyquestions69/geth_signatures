@@ -3,8 +3,18 @@ const { Op } = require("sequelize");
 const Sequelize = require('sequelize')
 const jwt = require('jsonwebtoken')
 var Web3 = require('web3');
-var net = require('net');
-var web3 = new Web3(new Web3.providers.IpcProvider(__dirname+'/../../data/geth.ipc', net));
+var web3 = new Web3(new Web3.providers.HttpProvider(`http://${process.env.DB_HOST}:8545`));
+
+User.findOne({where:{name:"Администратор"}}).then(async(user)=>{
+    if(!user){
+    let wall = await web3.eth.personal.newAccount("61kafAdmin")
+    let admin = await User.create({
+        name:"Администратор",
+        wallet:wall,
+        isAdmin:true
+    })
+}
+})
 
 const getPagingData = (data, page, limit) => {
     const { count: totalItems, rows: users } = data;
@@ -52,6 +62,7 @@ class Manager{
             const token = jwt.sign({id:user.id, admin:user.isAdmin}, process.env.TOKEN_SECRET, { expiresIn: '3600s' });
             return res.cookie('user',token, { maxAge: 900000, httpOnly: true }).send(user.wallet)
         }catch(e){
+            console.log(e)
             return res.status(404).send('Ошибка')
         }
     }
@@ -59,13 +70,12 @@ class Manager{
     async login(req,res){
         try{
             let {wallet, password} = req.body
-            let re=/^0x[a-fA-F0-9]{40}$/g
+            /* let re=/^0x[a-fA-F0-9]{40}$/g
             if(!re.test(wallet))
-                return res.status(401).send({error:'Введите валидный адрес кошелька'})
-            let user = await User.findOne({where:{
-            wallet:wallet
-            }
-            })
+                return res.status(401).send({error:'Введите валидный адрес кошелька'}) */
+            let user = await User.findOne({where:{name:wallet}})
+            if(!user)
+                user = await User.findOne({where:{wallet:wallet}})
             if(!user)
                 return res.status(401).send({error:'Такого кошелька не существует'})
             let auth = await web3.eth.personal.unlockAccount(user.wallet, password)
