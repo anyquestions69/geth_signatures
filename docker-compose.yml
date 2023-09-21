@@ -1,40 +1,43 @@
-version: "1.0"
+version: "3.9"
 
 services:
   app:
-    container_name: app
-    build: app/
-    working_dir:
-      /usr/src/app
-    ports:
-      - "80:80"
+    build:
+      context: ./app
+    working_dir: /opt/server
+    env_file:
+      - .env
+    expose:
+      - '3000'
     depends_on:
       - db
-    networks:
-      - network
-    env_file:
-      - ./app/.env
     command: npm run start
 
   # Контейнер с базой данных
   db:
-    container_name: db
     image: postgres:12-alpine
-    #build: db_data/
     environment:
-      #POSTGRES_DB: "mydb"
-      POSTGRES_USER: "public_hysteria"
-      POSTGRES_PASSWORD: "0666"
-      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
-      PGDATA: /var/lib/postgresql/data/db_d
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
-      - ./db_data:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
-    networks:
-      - network
+      - postgres:/var/lib/postgresql/data
+    expose:
+      - '5432'
     restart: always
 
+  nginx:
+    container_name: proxy_nginx
+    depends_on:
+      - app
+      - db
+    image: nginx:latest
+    ports:
+      - '80:80'
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+      - ./static:/var/www/static
+    restart: always
+    
   geth:
     image: ethereum/client-go
     pull_policy: always
@@ -47,17 +50,17 @@ services:
       - 8546:8546
       - 8551:8551
     volumes:
-      - ${GETH_DATADIR:-./data/geth}:/root/.ethereum
+      - ${GETH_DATADIR:-/data/geth}:/root/.ethereum
     stop_signal: SIGINT
     stop_grace_period: 2m
     healthcheck:
-      test: [ "CMD-SHELL", "geth attach --exec eth.blockNumber" ]
+      test: [ "CMD-SHELL", "geth --http --http.api=eth,net,web3,engine,admin,personal " ]
       interval: 10s
       timeout: 5s
       retries: 5
     command:
       - --http
-      - --http.api=eth,net,web3,personal,admin
+      - --http.api=eth,net,web3,engine,admin,personal
       - --http.addr=0.0.0.0
       - --http.vhosts=*
       - --http.corsdomain=*
@@ -73,16 +76,28 @@ services:
       - --authrpc.jwtsecret=/root/.ethereum/jwt.hex
       - --authrpc.port=8551
       - --txlookuplimit=0
+      - --allow-insecure-unlock
     logging:
       driver: json-file
       options:
         max-size: 2m
         max-file: 10
-  
+
+  pgadmin:
+    container_name: pgadmin
+    depends_on:
+      - db
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL:  admin@mail.ru
+      PGADMIN_DEFAULT_PASSWORD: aaa
+    expose:
+      - '80'
+    restart: always
 
 volumes:
-    db_data:
-
+  postgres:
+    external: true
 
 networks:
   network: {}

@@ -3,7 +3,7 @@ const { Op } = require("sequelize");
 const Sequelize = require('sequelize')
 const jwt = require('jsonwebtoken')
 var Web3 = require('web3');
-var web3 = new Web3(new Web3.providers.HttpProvider(`http://${process.env.DB_HOST}:8545`));
+var web3 = new Web3(new Web3.providers.HttpProvider(`http://${process.env.GETH_HOST}:8545`));
 
 User.findOne({where:{name:"Администратор"}}).then(async(user)=>{
     if(!user){

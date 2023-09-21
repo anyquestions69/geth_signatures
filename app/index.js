@@ -55,6 +55,6 @@ api.use('/auth', authRouter)
 app.use('/api', api)
 app.use('/', viewRouter)
 
-app.listen(80,()=>{
+app.listen(3000,()=>{
     console.log('works')
 })
