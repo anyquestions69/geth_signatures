@@ -61,9 +61,8 @@ User.belongsToMany(File, {through:Signature})
 
 
 
-sequelize.sync({force: false}).then(async function (result){
-  
-})
-.catch(err=> console.log(err));
+sequelize.sync({force: true}).then(async function (result){
+ 
+}).catch(err=> console.log(err));
 
 module.exports = { User, Signature, File}

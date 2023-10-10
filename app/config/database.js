@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const sequelize = new Sequelize(`postgres://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:5432/${process.env.DB_NAME}`)/*process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
+const sequelize = new Sequelize(`postgres://${'public_hysteria'}:${'0666'}@${'localhost'}:5432/${'postgres'}`)/*process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
   host:"postgres",
   dialect: "postgres"
 });*/
