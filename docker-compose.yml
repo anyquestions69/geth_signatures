@@ -11,6 +11,7 @@ services:
       - '3000'
     depends_on:
       - db
+      - geth
     restart: always
     command: npm run start
 

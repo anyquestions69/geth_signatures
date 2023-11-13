@@ -5,17 +5,7 @@ const jwt = require('jsonwebtoken')
 var Web3 = require('web3');
 var web3 = new Web3(new Web3.providers.HttpProvider(`http://${process.env.GETH_HOST}:8545`));
 
-(async()=>{
-    await User.findOne({where:{name:"Администратор"}}).then(async(user)=>{
-    if(!user){
-    let wall = await web3.eth.personal.newAccount("61kafAdmin")
-    let admin = await User.create({
-        name:"Администратор",
-        wallet:wall,
-        isAdmin:true
-    })
-}
-})})()
+
 
 const getPagingData = (data, page, limit) => {
     const { count: totalItems, rows: users } = data;

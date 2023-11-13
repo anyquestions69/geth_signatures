@@ -64,6 +64,7 @@ function getDate(today){
             for(let us of r.users){
               r.sigs.push(us.signature.hash)
             }
+            console.log(r.sigs)
             let li = 
             `<div class="d-flex text-body-secondary justify-content-between pt-3 border-bottom">
               

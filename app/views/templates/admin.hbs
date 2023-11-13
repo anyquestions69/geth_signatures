@@ -14,7 +14,7 @@
       <div class="my-3 p-3 bg-body text-center rounded shadow-sm border">
         <h6 class="border-bottom pb-2 mb-0">Выложить статью</h6>
        
-          <form  enctype="multipart/form-data" id="file-form">
+          <form enctype="multipart/form-data" id="file-form">
                 
                 <div class="form-floating mb-2">
                     <input type="text" class="form-control" name="title" id="file-title" placeholder="Название">
@@ -24,7 +24,7 @@
                 </div>
                 <div id="validationServerUsernameFeedback" class="text-danger"></div>
                 <div id="file-success" class="text-success"></div>
-                <button class="w-40 mx-auto btn btn-lg btn-primary" type="button" id="file-submit">Выложить</button>
+                <button class="w-40 mx-auto btn btn-lg btn-primary" type="submit" id="file-submit">Выложить</button>
           </form>
       </div>
       <div class="my-3 p-3 bg-body rounded shadow-sm border" >
@@ -64,12 +64,15 @@
       getUsers(1)
       getFiles(1)
 
-    $("#file-form").on('submit',async()=>{ //file
+    $("#file-form").on('submit',async(e)=>{ //file
+    e.preventDefault()
+    
         const formData = new FormData();
         const fileField = $('#file-file')[0];
         
         formData.append("title", $('#file-title').val());
         formData.append("file", fileField.files[0]);
+        console.log(formData)
         let response = await fetch('/api/files',{
         method: 'POST',
         body: formData

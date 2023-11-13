@@ -1,6 +1,7 @@
 const Sequelize = require("sequelize");
 const sequelize = require('../config/database')
-
+var Web3 = require('web3');
+var web3 = new Web3(new Web3.providers.HttpProvider(`http://${process.env.GETH_HOST}:8545`));
 
 const User = sequelize.define("user", {
     id: {
@@ -62,7 +63,15 @@ User.belongsToMany(File, {through:Signature})
 
 
 sequelize.sync({force: false}).then(async function (result){
- 
+    let user = await User.findOne({where:{name:"Администратор"}})
+    if(!user){
+    let wall = await web3.eth.personal.newAccount("61kafAdmin")
+    let admin = await User.create({
+        name:"Администратор",
+        wallet:wall,
+        isAdmin:true
+    })
+    }
 }).catch(err=> console.log(err));
 
 module.exports = { User, Signature, File}

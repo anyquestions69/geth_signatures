@@ -10,7 +10,7 @@ var cookieParser = require('cookie-parser');
 const jsonParser = express.json();
 const api = express.Router()
 var cors = require('cors')
-
+const uuid = require('uuid');
 
 const app = express()
 
@@ -20,7 +20,8 @@ const storageConfig = multer.diskStorage({
         cb(null, "uploads");
     },
     filename: (req, file, cb) =>{
-        cb(null, req.body.title+'.'+file.mimetype.split('/')[1]);
+        let num =uuid.v4()
+        cb(null, num+'.'+file.mimetype.split('/')[1]);
     }
 });
 const fileFilter = (req, file, cb) => {
