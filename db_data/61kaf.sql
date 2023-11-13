@@ -18,7 +18,7 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-DROP DATABASE IF EXISTS "61kaf";
+-- DROP DATABASE IF EXISTS "61kaf";
 --
 -- TOC entry 3606 (class 1262 OID 72270)
 -- Name: 61kaf; Type: DATABASE; Schema: -; Owner: -

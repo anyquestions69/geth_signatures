@@ -64,7 +64,7 @@
       getUsers(1)
       getFiles(1)
 
-    $("#file-submit").on('click',async()=>{ //file
+    $("#file-form").on('submit',async()=>{ //file
         const formData = new FormData();
         const fileField = $('#file-file')[0];
         
@@ -80,42 +80,17 @@
           let newactivity = JSON.parse(text )
           console.log(newactivity)
             $('#validationServerUsernameFeedback').empty()
-          $('#act-success').empty().append(`<p>Успешно добавлено занятие <a href="/activities/${newactivity.id}">${newactivity.name}</a></p>`)
+          $('#file-success').empty().append(`<p>Успешно добавлен приказ <a href="/files/${newactivity.id}">${newactivity.name}</a></p>`)
         }else{
         console.log(text)
-          $('#act-success').empty()
+          $('#file-success').empty()
             $('#validationServerUsernameFeedback').empty().append(`<p>${text}</p>`)
             
-            $('#activity-form>input').css('border-color', 'red'); 
+            $('#file-form>input').css('border-color', 'red'); 
         } 
-    }) //activity
+    }) 
 
-        $("#cat-submit").on('click',async()=>{ //category
-        const user = {
-          name:$('#cat-title').val()
-        }
-        let response = await fetch('/api/categories',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json;charset=utf-8'
-        },
-        body: JSON.stringify(user)
-        })
-        let text = await response.text()
-
-        if(response.ok){
-          let newactivity = JSON.parse(text )
-          console.log(newactivity)
-            $('#catValid').empty()
-          $('#cat-success').empty().append(`<p>Успешно добавлена категория <a href="/activities/${newactivity.id}">${newactivity.name}</a></p>`)
-        }else{
-        console.log(text)
-          $('#cat-success').empty()
-            $('#catValid').empty().append(`<p>${text}</p>`)
-            
-            $('#category-form>input').css('border-color', 'red'); 
-        }
-    })
+      
 
     })
     
