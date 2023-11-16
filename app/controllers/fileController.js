@@ -173,7 +173,6 @@ class Manager{
         try {
             const password = req.body.password
             console.log(password)
-            console.log(req.user)
             let usr = await User.findOne({where:{id:req.user.id}})
             let users = await User.count()
             if(!usr)return res.send('Необходимо авторизоваться')
@@ -182,6 +181,7 @@ class Manager{
             if(exists)
                 return res.status(404).send('Вы уже расписались!')
             const signature = await web3.eth.personal.sign(file.name, req.user.wallet, password )
+            console.log(signature)
             let result = await file.addUser(req.user, {through:{hash:signature}})
             if(file.users.length+1==users){
                 file.status=true
@@ -192,7 +192,7 @@ class Manager{
             }
             return res.status(404).send('Ошибка')
         } catch (error) {
-            return res.status(404).send(error)
+            return res.status(404).send('Неправильный пароль')
         }
        
     }

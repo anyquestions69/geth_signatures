@@ -63,11 +63,11 @@ User.belongsToMany(File, {through:Signature})
 
 
 sequelize.sync({force: false}).then(async function (result){
-    let user = await User.findOne({where:{name:"Администратор"}})
+    let user = await User.findOne({where:{name:process.env.ADMIN_NAME}})
     if(!user){
-    let wall = await web3.eth.personal.newAccount("61kafAdmin")
+    let wall = await web3.eth.personal.newAccount(process.env.ADMIN_PASS)
     let admin = await User.create({
-        name:"Администратор",
+        name:process.env.ADMIN_NAME,
         wallet:wall,
         isAdmin:true
     })
