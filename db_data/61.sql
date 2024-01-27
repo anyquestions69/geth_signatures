@@ -214,7 +214,7 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.users (id, wallet, name, "isAdmin", "createdAt", "updatedAt") VALUES (1, '0xDe3eB0734c7bf61f9BD27718C82AEB181c769345', 'Администратор', true, '2023-11-13 18:05:36.302+00', '2023-11-13 18:05:36.302+00');
+--INSERT INTO public.users (id, wallet, name, "isAdmin", "createdAt", "updatedAt") VALUES (1, '0xDe3eB0734c7bf61f9BD27718C82AEB181c769345', 'Администратор', true, '2023-11-13 18:05:36.302+00', '2023-11-13 18:05:36.302+00');
 
 
 --
