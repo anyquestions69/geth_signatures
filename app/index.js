@@ -20,22 +20,15 @@ const storageConfig = multer.diskStorage({
         cb(null, "uploads");
     },
     filename: (req, file, cb) =>{
+       
         let num =uuid.v4()
         cb(null, num+'.'+file.mimetype.split('/')[1]);
     }
 });
-const fileFilter = (req, file, cb) => {
-  
-    if(file.mimetype === "application/pdf"){
-        cb(null, true);
-    }
-    else{
-        cb(null, false);
-    }
- }
+
 
  
-app.use(multer({storage:storageConfig, fileFilter: fileFilter, dest:"uploads"}).single("file"));
+app.use(multer({storage:storageConfig, dest:"uploads"}).single("file"));
 
 
 app.set("view engine", "hbs");

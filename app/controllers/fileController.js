@@ -133,12 +133,17 @@ class Manager{
     }
 
     async post(req, res){
-        let file = await File.create({
-            name:req.body.title,
-            path:'/'+req.file.path,
-            status:false
-        })
-        res.send(file)
+        try {
+            let file = await File.create({
+                name:req.body.title,
+                path:'/'+req.file.path,
+                status:false
+            })
+            return res.send(file)
+        } catch (error) {
+            return {error:error}
+        }
+        
     }
 
     async viewOne(req,res){
