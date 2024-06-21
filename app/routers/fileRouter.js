@@ -7,7 +7,7 @@ fileRouter.get("/", auth.getUser, fileController.getAll);
 fileRouter.get("/all", auth.isAuth,auth.isAdmin, fileController.adminGetAll);
 fileRouter.get('/:id', fileController.getOne)
 fileRouter.post('/:id', auth.isAuth,fileController.assing)
-fileRouter.post("/", auth.isAuth, auth.isAdmin, fileController.post);
+fileRouter.post("/", auth.isAuth, auth.isAdmin, multer({storage:storage}).single("file"), fileController.post);
 
  
 module.exports = fileRouter;
