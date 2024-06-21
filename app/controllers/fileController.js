@@ -134,6 +134,7 @@ class Manager{
 
     async post(req, res){
         try {
+            console.log(req.file)
             let file = await File.create({
                 name:req.body.title,
                 path:'/'+req.file.path,
