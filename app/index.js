@@ -14,21 +14,18 @@ const uuid = require('uuid');
 
 const app = express()
 
-
-const storageConfig = multer.diskStorage({
-    destination: (req, file, cb) =>{
-        cb(null, "uploads");
-    },
-    filename: (req, file, cb) =>{
-       
-        let num =uuid.v4()
-        cb(null, num+'.'+file.mimetype.split('/')[1]);
-    }
-});
+const storage = multer.diskStorage({  
+    destination:(req,file,cb)=>{  
+        cb(null,'./views/img');  
+    },  
+    filename:(req,file,cb)=>{  
+        cb(null,file.originalname);  
+    }  
+  });  
 
 
- 
-app.use(multer({storage:storageConfig, dest:"uploads"}).single("file"));
+
+
 
 
 app.set("view engine", "hbs");
